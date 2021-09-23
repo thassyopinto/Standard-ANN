@@ -17,7 +17,7 @@
 #include "ANN_Neuron.hpp"
 #include "ANN_Connection.hpp"
 
-// An artificial neural network class.
+// An artificial neural network class..
 template<typename Neuron_t = Neuron, typename Connection_t = Connection>
 class NeuralNetwork{
   public:
