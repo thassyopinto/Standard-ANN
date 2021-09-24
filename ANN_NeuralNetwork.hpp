@@ -26,6 +26,11 @@ class NeuralNetwork{
       for(int i = 0; i < numberOfNeurons; i++){
         this->addNeuron();
       }
+      for(int i = 0; i < _neurons.size(); i++){
+        for(int j = 0; j < _neurons.size(); j++){
+          this->addConnection(i, j, 0.0);
+        }
+      }
     }
 
     // Sets the minimum weight that a connection may get due to randomization or mutation.
@@ -79,6 +84,19 @@ class NeuralNetwork{
       _neurons[neuronIndex].setIncoming(incoming);
     }
 
+    // Sets the weight of the indicated neuron.
+    void setWeight(size_t connectionIndex, double weight){
+        _connections[connectionIndex].setWeight(weight);
+    }
+
+    // Returns the weight of the indicated connection.
+    void getWeight(size_t connectionIndex){
+      if(connectionIndex >= _connections.size()){
+        std::cerr << "Index out of bounds! Index: " << connectionIndex << " size: " << _connections.size() << std::endl;
+      }
+      return _connections[connectionIndex].getWeight();
+    }
+
     // Adds a neuron to this network.
     void addNeuron(){
       _neurons.push_back(Neuron());
@@ -109,22 +127,25 @@ class NeuralNetwork{
       }
     }
 
-    // Generates a fully connected network.
+    // Randomizes the network.
     void randomize(){
       // Assigns each neuron, uniform randomly, a bias in [_minWeight, _maxWeight]
       for(int i = 0; i < _neurons.size(); i++){
         this->setBias(i, randDouble(_minWeight, _maxWeight));
-        // Assigns each connection, uniform randomly, a weight in [_minWeight, _maxWeight]
-        for(int j = 0; j < _neurons.size(); j++){
-          this->addConnection(i, j, randDouble(_minWeight, _maxWeight));
-        }
+      }
+      // Assigns each connection, uniform randomly, a weight in [_minWeight, _maxWeight]
+      for(int i = 0; i < _connections.size(); i++){
+        this->setWeight(i, randDouble(_minWeight, _maxWeight));
       }
     }
 
-    // Initializes each neuron in the network with a random value.
-    void initialize(double minValue, double maxValue){
+    // Initializes the network with specific values and weights.
+    void initialize(double initValue, double initWeight){
       for(int i = 0; i < _neurons.size(); i++){
-        this->setValue(i, randDouble(minValue, maxValue));
+        this->setValue(i, initValue);
+      }
+      for(int i = 0; i < _connections.size(); i++){
+        this->setWeight(i, initWeight);
       }
     }
 

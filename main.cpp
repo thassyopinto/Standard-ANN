@@ -12,6 +12,12 @@
 
 // Local libraries
 #include "ANN_NeuralNetwork.hpp"
+#include "Misc_Random.hpp"
+
+double VAL_MIN = 0.0;
+double VAL_MAX = 1.0;
+double WGT_MIN = -1.0;
+double WGT_MAX = 1.0;
 
 int main(int argc, char* argv[]) {
 
@@ -21,10 +27,10 @@ int main(int argc, char* argv[]) {
 
     ann_t myNetwork(10);
 
-    myNetwork.setMinWeight(-1.0);
-    myNetwork.setMaxWeight(1.0);
+    myNetwork.setMinWeight(WGT_MIN);
+    myNetwork.setMaxWeight(WGT_MAX);
     myNetwork.reset();
-    myNetwork.initialize(0.0,1.0);
+    myNetwork.initialize(randDouble(VAL_MIN, VAL_MAX), 0.0);
     myNetwork.randomize();
 
     std::ofstream networkFile("standard_ANN.csv");
