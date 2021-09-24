@@ -17,7 +17,7 @@
 #include "ANN_Neuron.hpp"
 #include "ANN_Connection.hpp"
 
-// An artificial neural network class..
+// An artificial neural network class.
 template<typename Neuron_t = Neuron, typename Connection_t = Connection>
 class NeuralNetwork{
   public:
@@ -89,12 +89,13 @@ class NeuralNetwork{
       _connections.push_back(Connection(sourceIndex, targetIndex, weight));
     }
 
-
     // Performs one step of network activation.
     void step(){
+      // Resets the incoming values of neurons to 0.
       for(int i = 0; i < _neurons.size(); i++){
         this->setIncoming(i, 0.0);
       }
+      // Updates the incoming values of all neurons by iterating over all their incoming connections.
       for(int i = 0; i < _neurons.size(); i++){
         for(int j = 0; j < _connections.size(); j++){
           if(_connections[j].getTarget() == i){
@@ -102,19 +103,35 @@ class NeuralNetwork{
           }
         }
       }
+      // Propagates the incoming value to become the current activation of that neuron.
       for(int i = 0; i < _neurons.size(); i++){
         _neurons[i].propagate();
       }
     }
 
-    // Assigns random weights to each connection.
+    // Generates a fully connected network.
     void randomize(){
+      // Assigns each neuron, uniform randomly, a bias in [_minWeight, _maxWeight]
       for(int i = 0; i < _neurons.size(); i++){
-        this->setValue(i, randDouble(0.0, 1.0));
         this->setBias(i, randDouble(_minWeight, _maxWeight));
+        // Assigns each connection, uniform randomly, a weight in [_minWeight, _maxWeight]
         for(int j = 0; j < _neurons.size(); j++){
           this->addConnection(i, j, randDouble(_minWeight, _maxWeight));
         }
+      }
+    }
+
+    // Initializes each neuron in the network with a random value.
+    void initialize(double minValue, double maxValue){
+      for(int i = 0; i < _neurons.size(); i++){
+        this->setValue(i, randDouble(minValue, maxValue));
+      }
+    }
+
+    // Resets all neurons in the network.
+    void reset(){
+      for(int i = 0; i < _neurons.size(); i++){
+        _neurons[i].reset();
       }
     }
 
@@ -126,13 +143,6 @@ class NeuralNetwork{
           activationFile << " " << this->getValue(i);
         }
         activationFile << "\n";
-      }
-    }
-
-    // Resets all neurons in the network.
-    void reset(){
-      for(int i = 0; i < _neurons.size(); i++){
-        _neurons[i].reset();
       }
     }
 
@@ -161,14 +171,15 @@ std::ostream& operator<<(std::ostream& is, NeuralNetwork<Neuron, Connection>& ob
   std::vector<Neuron> neurons = obj.getNeurons();
   std::vector<Connection> connections = obj.getConnections();
 
-  //Write neurons
   is << neurons.size() << " ";
   is << connections.size() << " ";
+
+  // Write neurons to file.
   for(size_t i=0; i<neurons.size(); ++i){
     is << neurons[i].getBias() << " ";
   }
 
-  //Write connections
+  // Write connections to file.
   for(size_t i=0; i<connections.size(); ++i){
     is << connections[i].getSource() << " " << connections[i].getTarget() << " "<< connections[i].getWeight()<< " ";
   }

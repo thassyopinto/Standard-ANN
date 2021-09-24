@@ -17,16 +17,14 @@ int main(int argc, char* argv[]) {
 
     seed();
 
-    typedef NeuralNetwork<> ind_t;
+    typedef NeuralNetwork<> ann_t;
 
-    ind_t myNetwork (10);
+    ann_t myNetwork(10);
 
     myNetwork.setMinWeight(-1.0);
-
     myNetwork.setMaxWeight(1.0);
-
     myNetwork.reset();
-
+    myNetwork.initialize(0.0,1.0);
     myNetwork.randomize();
 
     std::ofstream networkFile("standard_ANN.csv");
