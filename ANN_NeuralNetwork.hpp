@@ -21,15 +21,22 @@
 template<typename Neuron_t = Neuron, typename Connection_t = Connection>
 class NeuralNetwork{
   public:
-    // Initializes the network with the supplied number of neurons.
+    // Builds a fully connected network with the supplied number of neurons.
     NeuralNetwork(size_t numberOfNeurons = 0){
+      // Creates neurons.
       for(int i = 0; i < numberOfNeurons; i++){
         this->addNeuron();
       }
+      // Creates connections.
       for(int i = 0; i < _neurons.size(); i++){
         for(int j = 0; j < _neurons.size(); j++){
           this->addConnection(i, j, 0.0);
         }
+      }
+      // Adds the index of all connections.
+      for(int i = 0; i < _connections.size(); i++){
+        this->addIncoming(this->getTarget(i), i);
+        this->addOutgoing(this->getSource(i), i);
       }
     }
 
@@ -84,17 +91,43 @@ class NeuralNetwork{
       _neurons[neuronIndex].setIncoming(incoming);
     }
 
+    // Adds the index of an incoming connection to the indicated neuron.
+    void addIncoming(size_t neuronIndex, size_t incomingIndex){
+      _neurons[neuronIndex].addIncoming(incomingIndex);
+    }
+
+    // Adds the index of an outgoing connection to the indicated neuron.
+    void addOutgoing(size_t neuronIndex, size_t outgoingIndex){
+      _neurons[neuronIndex].addOutgoing(outgoingIndex);
+    }
+
     // Sets the weight of the indicated neuron.
     void setWeight(size_t connectionIndex, double weight){
         _connections[connectionIndex].setWeight(weight);
     }
 
     // Returns the weight of the indicated connection.
-    void getWeight(size_t connectionIndex){
+    double getWeight(size_t connectionIndex){
       if(connectionIndex >= _connections.size()){
         std::cerr << "Index out of bounds! Index: " << connectionIndex << " size: " << _connections.size() << std::endl;
       }
       return _connections[connectionIndex].getWeight();
+    }
+
+    // Returns the source of the indicated connection.
+    size_t getSource(size_t connectionIndex){
+      if(connectionIndex >= _connections.size()){
+        std::cerr << "Index out of bounds! Index: " << connectionIndex << " size: " << _connections.size() << std::endl;
+      }
+      return _connections[connectionIndex].getSource();
+    }
+
+    // Returns the target of the indicated connection.
+    size_t getTarget(size_t connectionIndex){
+      if(connectionIndex >= _connections.size()){
+        std::cerr << "Index out of bounds! Index: " << connectionIndex << " size: " << _connections.size() << std::endl;
+      }
+      return _connections[connectionIndex].getTarget();
     }
 
     // Adds a neuron to this network.
