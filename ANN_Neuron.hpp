@@ -14,13 +14,26 @@
 // A neuron class for neural networks.
 class Neuron{
   public:
+    // Enumerator for the different possible activation functions.
+    // - linear: identity, except that it truncates values to lie in [-1, 1]
+    // - sin: calculates the sine-wave (f(x)=sin(x))
+    // - gaussian: calculates a gaussian (f(x)=e^(-x*x)), scaled to lie in [-1, 1]
+    // - sigmoid: calculates the sigmoid (f(x)=tanh(x*lambda))
+    enum af_t{
+      linear,
+      sine,
+      gaussian,
+      sigmoid,
+      nbActivationFunctions
+    };
     // Constructor. Creates a new neuron with the indicated number of incoming connection.
     // The current and new activations are initialized to zero.
     Neuron():
       _value(0),
       _incoming(0),
       _bias(0),
-      _lambda(5.0){
+      _lambda(5.0),
+      _activationFunction(sigmoid){
     }
 
     // Return the current activation value of this neuron.
@@ -86,11 +99,46 @@ class Neuron{
 
     // Updates the activation value based on the incoming potential and the bias.
     void propagate(){
-        _value = std::tanh(_incoming + _bias) * _lambda;
+      double x = this->getIncoming() + this->getBias();
+      switch(_activationFunction){
+        case linear:
+          if(x > 1) _value = 1;
+          else if(x < -1) _value = -1;
+          else _value = x;
+          break;
+        case sine:
+          _value = std::sin(x);
+          break;
+        case gaussian:
+          _value = std::exp(float(-x*x)) * 2.0 - 1.0;
+          break;
+        case sigmoid:
+          _value = std::tanh(x * _lambda);
+          break;
+        default:
+          std::cout << "Error! No activation function found!" << std::endl;
+          break;
+      }
+    }
+
+    // Sets the current activation function.
+    // Possible values are:
+    // - linear
+    // - sin
+    // - guassian
+    // - sigmoid
+    void setActivationFunction(af_t activation){
+      _activationFunction = activation;
+    }
+
+    // Returns the current activation function.
+    af_t getActivationFunction(){
+      return _activationFunction;
     }
 
   protected:
     // ANN attributes
+    af_t _activationFunction;
     std::vector<size_t> _incomingIndices;
     std::vector<size_t> _outgoingIndices;
     double _value;
