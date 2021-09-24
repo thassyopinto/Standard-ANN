@@ -91,6 +91,21 @@ class NeuralNetwork{
       _neurons[neuronIndex].setIncoming(incoming);
     }
 
+    // Updates the current incoming potential of the indicated neuron.
+    void updateIncoming(size_t neuronIndex, double update){
+      _neurons[neuronIndex].updateIncoming(update);
+    }
+
+    // Updates the activation value of the indicated neuron.
+    void propagateNeuron(size_t neuronIndex){
+      _neurons[neuronIndex].propagate();
+    }
+
+    // Resets the state of the indicated neuron.
+    void resetNeuron(size_t neuronIndex){
+      _neurons[neuronIndex].reset();
+    }
+
     // Adds the index of an incoming connection to the indicated neuron.
     void addIncoming(size_t neuronIndex, size_t incomingIndex){
       _neurons[neuronIndex].addIncoming(incomingIndex);
@@ -101,7 +116,7 @@ class NeuralNetwork{
       _neurons[neuronIndex].addOutgoing(outgoingIndex);
     }
 
-    // Sets the weight of the indicated neuron.
+    // Sets the weight of the indicated connection.
     void setWeight(size_t connectionIndex, double weight){
         _connections[connectionIndex].setWeight(weight);
     }
@@ -140,23 +155,23 @@ class NeuralNetwork{
       _connections.push_back(Connection(sourceIndex, targetIndex, weight));
     }
 
-    // Performs one step of network activation.
-    void step(){
+    // Performs one update of network activation.
+    void update(){
       // Resets the incoming values of neurons to 0.
       for(int i = 0; i < _neurons.size(); i++){
         this->setIncoming(i, 0.0);
       }
       // Updates the incoming values of all neurons by iterating over all their incoming connections.
       for(int i = 0; i < _neurons.size(); i++){
-        for(int j = 0; j < _connections.size(); j++){
-          if(_connections[j].getTarget() == i){
-            _neurons[i].updateIncoming(this->getValue(_connections[j].getSource()) * _connections[j].getWeight());
-          }
+        std::vector<size_t> incomingConnections = _neurons[i].getIncomingIndices();
+        for(int j = 0; j < incomingConnections.size(); j++){
+          double updateValue = this->getValue(this->getSource(incomingConnections[j])) * this->getWeight(incomingConnections[j]);
+          this->updateIncoming(i, updateValue);
         }
       }
       // Propagates the incoming value to become the current activation of that neuron.
       for(int i = 0; i < _neurons.size(); i++){
-        _neurons[i].propagate();
+        this->propagateNeuron(i);
       }
     }
 
@@ -185,7 +200,7 @@ class NeuralNetwork{
     // Resets all neurons in the network.
     void reset(){
       for(int i = 0; i < _neurons.size(); i++){
-        _neurons[i].reset();
+        this->resetNeuron(i);
       }
     }
 
@@ -200,11 +215,12 @@ class NeuralNetwork{
       }
     }
 
-    void run(size_t numberOfSteps, std::string activationFileName = ""){
+    // Run the neural network for a given number of updates.
+    void run(size_t numberOfUpdates, std::string activationFileName = ""){
       std::ofstream actFile;
       if(activationFileName != "") actFile.open(activationFileName);
-      for(int i = 0; i < numberOfSteps; i++){
-        this->step();
+      for(int i = 0; i < numberOfUpdates; i++){
+        this->update();
         this->logActivation(actFile);
       }
       actFile.close();
