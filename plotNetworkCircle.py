@@ -1,18 +1,12 @@
 #!/usr/bin/python
+
 import sys
-import numpy as np 
+import numpy as np
 import matplotlib.pyplot as plt
 import math
 
-inputNeuron = 1
-outputNeuron = 2
-hiddenNeuron = 3
-
 numbersPerNeuron = 1
 numbersPerConnection = 3
-
-nbOfInputs = 4
-nbOfOutputs = 8
 
 ymin = -1.2
 ymax = 1.2
@@ -23,8 +17,10 @@ width = (xmax - xmin)*scale
 height = (ymax - ymin)*scale
 xmargin = (xmax - xmin - 1)/8
 
-inhibColor = [0.8,0,0]
-excitColor = [0,0.7,0]
+# inhibColor = [0.8,0,0]
+inhibColor = [0.9,0,0]
+# excitColor = [0,0.7,0]
+excitColor = [0,0,0.9]
 
 arrowDist = 0.15
 neuronRadius = 0.1
@@ -71,10 +67,10 @@ def readFile(filename):
       connections.append(connection)
 
    inputFile.close()
-   
+
    return neurons, connections
 
-def plotNetwork(nbOfInputs, nbOfOutputs, neurons, connections):
+def plotNetwork(neurons, connections):
    ax = plt.axes()
 
    positions = [(0,0)] * len(neurons)
@@ -106,8 +102,8 @@ def plotNetwork(nbOfInputs, nbOfOutputs, neurons, connections):
       #Draw the bias
       if w > 0.05:
           circ = plt.Circle((x,y), radius=w, color=currentColor, fill=True, zorder=3)
-          ax.add_patch(circ)    
-     
+          ax.add_patch(circ)
+
 
    for connectionIndex in range(len(connections)):
       connection = connections[connectionIndex]
@@ -124,7 +120,7 @@ def plotNetwork(nbOfInputs, nbOfOutputs, neurons, connections):
 
       #Determine line weight based on weight
       w = (2*abs(weight))+0.2
-      
+
       #If the target equals the source, draw a circle; otherwise draw an arrow
       if source == target:
          x_offset = neuronRadius
@@ -144,16 +140,15 @@ def plotNetwork(nbOfInputs, nbOfOutputs, neurons, connections):
          arr = plt.arrow(x1, y1, xdiff, ydiff, head_width=arrowWidth, head_length=arrowLength, color=currentColor, linewidth=w, zorder=1)
          ax.add_patch(arr)
 
-  
+
 
 i=0
 for arg in sys.argv[1:]:
    plt.figure(i, figsize=(width,height))
    neurons, connections = readFile(arg)
-   plotNetwork(nbOfInputs, nbOfOutputs, neurons, connections)
+   plotNetwork(neurons, connections)
    plt.ylim([ymin, ymax])
    plt.xlim([xmin, xmax])
-   plt.savefig(arg + ".pdf")
+   plt.savefig(arg + ".png")
    plt.clf()
    i+=1
-
