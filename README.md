@@ -7,7 +7,7 @@ This is a Standard ANN library.
 Possible activation functions:
 - Linear: identity, except that it truncates values to lie in [-1, 1]
 - Sine: calculates the sine-wave f(x) = sin(x)
-- Gaussian: calculates a gaussian f(x) = e^(-x*x)), scaled to lie in [-1, 1]
+- Gaussian: calculates a gaussian f(x) = e^(-x*x), scaled to lie in [-1, 1]
 - Sigmoid: calculates the sigmoid f(x)=tanh(x*lambda)
 
 <p align="center">
