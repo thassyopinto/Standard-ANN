@@ -13,15 +13,19 @@ Possible activation functions:
 **Testing the Library**
 
 ```console
-g++ main.cpp
+g++ main.cpp -o ANN
+```
+
+```console
+./ANN [number_of_neurons]
 ```
 
 **Visualizing the Neural Network**
 
 ```console
-python plotNetworkCircle.py standard_ANN.csv
+python plotANN.py std_ANN.csv
 ```
 
 <p align="center">
-  <img src="standard_ANN.csv.png" />
+  <img src="std_ANN.csv.png" />
 </p>
