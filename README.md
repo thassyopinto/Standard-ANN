@@ -16,6 +16,12 @@ Possible activation functions:
 g++ main.cpp
 ```
 
+**Visualizing the Neural Network**
+
+```console
+python plotNetworkCircle.py standard_ANN.csv
+```
+
 <p align="center">
   <img src="standard_ANN.csv.png" />
 </p>
