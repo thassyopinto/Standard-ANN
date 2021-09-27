@@ -10,6 +10,12 @@ Possible activation functions:
 - Gaussian: calculates a gaussian f(x) = e^(-x*x), scaled to lie in [-1, 1]
 - Sigmoid: calculates the sigmoid f(x)=tanh(x*lambda)
 
+**Testing the Library**
+
+```console
+g++ main.cpp
+```
+
 <p align="center">
   <img src="standard_ANN.csv.png" />
 </p>
