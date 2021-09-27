@@ -17,10 +17,8 @@ width = (xmax - xmin)*scale
 height = (ymax - ymin)*scale
 xmargin = (xmax - xmin - 1)/8
 
-# inhibColor = [0.8,0,0]
-inhibColor = [0.9,0,0]
-# excitColor = [0,0.7,0]
-excitColor = [0,0,0.9]
+inhibColor = [1,0,0]
+excitColor = [0,0,1]
 
 arrowDist = 0.15
 neuronRadius = 0.1
@@ -72,6 +70,8 @@ def readFile(filename):
 
 def plotNetwork(neurons, connections):
    ax = plt.axes()
+   ax.axes.xaxis.set_visible(False)
+   ax.axes.yaxis.set_visible(False)
 
    positions = [(0,0)] * len(neurons)
    angle = 0.0
@@ -144,11 +144,11 @@ def plotNetwork(neurons, connections):
 
 i=0
 for arg in sys.argv[1:]:
-   plt.figure(i, figsize=(width,height))
-   neurons, connections = readFile(arg)
-   plotNetwork(neurons, connections)
-   plt.ylim([ymin, ymax])
-   plt.xlim([xmin, xmax])
-   plt.savefig(arg + ".png")
-   plt.clf()
-   i+=1
+    plt.figure(i, figsize=(width,height))
+    neurons, connections = readFile(arg)
+    plotNetwork(neurons, connections)
+    plt.ylim([ymin, ymax])
+    plt.xlim([xmin, xmax])
+    plt.savefig(arg + ".png")
+    plt.clf()
+    i+=1
