@@ -2,7 +2,7 @@ This is a Standard ANN library.
 
 **Activation Function**
 <p align="center">
-  <img src="https://render.githubusercontent.com/render/math?math=a^(t+1)_i=\sigma \Sigma">
+  <img src="https://render.githubusercontent.com/render/math?math=a^(t\sum1)_(i)=\sigma \Sigma">
 </p>
 
 <p align="center">
